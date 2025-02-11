@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.ant-card {
+  width: 100%;
+}
+
+.ant-card-cover img {
+  height: 200px;
+  object-fit: cover;
+}
+/* Đảm bảo header không bị tràn ra ngoài */
+.ant-layout-header {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  transition: all 0.3s;
+}
+
+/* Đảm bảo logo không bị co lại trên các thiết bị nhỏ */
+@media (max-width: 768px) {
+  .ant-layout-header {
+    backdrop-filter: none;
+    background: #fff !important;
+    gap: 20px !important;
+    padding: 0 20px !important;
+  }
+  
+  .ant-layout-content {
+    padding: 84px 20px 20px !important;
+  }
+}
