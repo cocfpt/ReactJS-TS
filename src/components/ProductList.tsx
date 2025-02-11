@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Card, Spin, Rate, Tag, Typography } from 'antd';
-import axios from 'axios';
+import { fetchProducts } from '../utils/api'; // Import the fetchProducts function
 
 interface Product {
   id: number;
@@ -36,28 +36,22 @@ const ProductList: React.FC<ProductListProps> = ({ searchQuery, shouldReset, fil
 
     setLoading(true);
     try {
-      const response = await axios.get(
-        `https://dummyjson.com/products/search?q=${searchQuery}&skip=${page * 5}&limit=5`
-      );
-      console.log('API Response:', response.data);
-      
-      const newProducts = response.data.products.map(p => ({
-        ...p,
-        tags: p.tags || [],
-        brand: p.brand || 'Unknown',
-        discountPercentage: p.discountPercentage || 0,
-        stock: p.stock ?? 0
-      }));
+      const newProducts = await fetchProducts(searchQuery, page);
+      const filteredProducts = newProducts.filter(product => {
+        const matchesCategory = (filters.category || []).length === 0 || (filters.category || []).includes(product.category);
+        return matchesCategory;
+      });
+      console.log('Filtered products:', filteredProducts); // Debugging line
       setProducts(prevProducts => 
-        page === 0 ? newProducts : [...prevProducts, ...newProducts]
+        page === 0 ? filteredProducts : [...prevProducts, ...filteredProducts]
       );
-      setHasMore(newProducts.length === 5);
+      setHasMore(filteredProducts.length === 5);
       setPage(prevPage => prevPage + 1);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
-      setScrollCount(0); // Reset counter after loading
+      setScrollCount(0);
     }
   };
 
@@ -99,9 +93,9 @@ const ProductList: React.FC<ProductListProps> = ({ searchQuery, shouldReset, fil
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = filters.category.length === 0 || filters.category.includes(product.category);
-    const matchesTags = filters.tags.length === 0 || filters.tags.some(tag => product.tags.includes(tag));
-    const matchesBrand = filters.brand.length === 0 || filters.brand.includes(product.brand);
+    const matchesCategory = (filters.category || []).length === 0 || (filters.category || []).includes(product.category);
+    const matchesTags = (filters.tags || []).length === 0 || (filters.tags || []).some(tag => product.tags.includes(tag));
+    const matchesBrand = (filters.brand || []).length === 0 || (filters.brand || []).includes(product.brand);
 
     return matchesSearch && matchesCategory && matchesTags && matchesBrand;
   });
