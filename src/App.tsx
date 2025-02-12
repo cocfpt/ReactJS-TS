@@ -11,8 +11,10 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [resetTrigger, setResetTrigger] = useState(false);
-  const [filters, setFilters] = useState<{ category: string[] }>({
-    category: []
+  const [filters, setFilters] = useState<{ category: string[], tags: string[], brand: string[] }>({
+    category: [],
+    tags: [],
+    brand: []
   });
 
   const handleLogoClick = () => {
@@ -26,7 +28,10 @@ const App: React.FC = () => {
   };
 
   const handleFilterChange = (newFilters: { category: string[] }) => {
-    setFilters(newFilters);
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
   };
 
   return (

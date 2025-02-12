@@ -12,7 +12,7 @@ interface HeaderProps {
   setInputValue: (value: string) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, searchQuery, inputValue, setSearchQuery, setInputValue }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, inputValue, setSearchQuery, setInputValue }) => {
   return (
     <AntHeader style={{ 
       background: 'rgba(255, 255, 255, 0.8)',

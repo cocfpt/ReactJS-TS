@@ -18,13 +18,13 @@ interface Product {
 
 interface ProductListProps {
   searchQuery: string;
-  shouldReset?: boolean;
+  resetTrigger: boolean;
   filters: { category: string[], tags: string[], brand: string[] };
 }
 
 const { Text } = Typography;
 
-const ProductList: React.FC<ProductListProps> = ({ searchQuery, shouldReset, filters }) => {
+const ProductList: React.FC<ProductListProps> = ({ searchQuery, resetTrigger, filters }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -37,7 +37,7 @@ const ProductList: React.FC<ProductListProps> = ({ searchQuery, shouldReset, fil
     setLoading(true);
     try {
       const newProducts = await fetchProducts(searchQuery, page);
-      const filteredProducts = newProducts.filter(product => {
+      const filteredProducts = newProducts.filter((product: Product) => {
         const matchesCategory = (filters.category || []).length === 0 || (filters.category || []).includes(product.category);
         return matchesCategory;
       });
@@ -83,13 +83,13 @@ const ProductList: React.FC<ProductListProps> = ({ searchQuery, shouldReset, fil
   }, [scrollCount]);
 
   useEffect(() => {
-    if (shouldReset) {
+    if (resetTrigger) {
       setProducts([]);
       setPage(0);
       setHasMore(true);
       loadMoreProducts();
     }
-  }, [shouldReset]);
+  }, [resetTrigger]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
